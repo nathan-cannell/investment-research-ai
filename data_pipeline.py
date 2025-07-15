@@ -53,9 +53,9 @@ def base_returns(API_KEY, ticker, from_date, to_date):
 
     # Assuming you have a DataFrame 'spy_df' with 'date' and 'close' columns
     df['return'] = df['close'].pct_change()
-    
+
     # Resample to quarterly and calculate compounded return
-    df_quarterly = (1 + df['return']).resample('Q').prod() - 1
+    df_quarterly = (1 + df['return']).resample('QE-DEC').prod() - 1
     df_quarterly = df_quarterly.rename('spy_quarterly_return')
     return df, df_quarterly
 
@@ -63,22 +63,16 @@ def future_excess_return(portfolio_return, benchmark_return):
     excess_return = portfolio_return - benchmark_return
     return excess_return
 
-def main():
-    print("Data Pipeline Initialized")
-    API_KEY = "TTXLaHBArYCOrGJpkuNaMJdVeJ0dLDRG"
-    from_date = "2025-01-01"
-    to_date = "2025-07-10"
+def generate_technical_alpha_signals(df):
+    if 'return' not in df:
+        df['return'] = df['close'].pct_change()
+    # Simple Moving Average Crossover Strategy
+    df['SMA_20'] = df['close'].rolling(window=20).mean()
+    df['SMA_50'] = df['close'].rolling(window=50).mean()
+    df['signal'] = 0
+    df.loc[df['SMA_20'] > df['SMA_50'], 'signal'] = 1  # Bullish crossover
+    df.loc[df['SMA_20'] < df['SMA_50'], 'signal'] = -1 # Bearish crossover
+    df['strategy_return'] = df['signal'].shift(1) * df['return']
+    alpha = df['strategy_return'].mean() - df['return'].mean() # Simplified alpha
 
-    # excess_return = future_excess_return(0.10, 0.03)
-    apple_vals = OHLCV(API_KEY, "AAPL", from_date, to_date)
-    bench_returns, spy_quarterly = base_returns(API_KEY, "SPY", from_date, to_date)
-
-
-
-    print(apple_vals.head())
-    print(bench_returns.head())
-    print(spy_quarterly.head())
-
-
-if __name__ == "__main__":
-    main()
+    return df, alpha
