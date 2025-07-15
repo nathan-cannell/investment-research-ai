@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 import xgboost as xgb
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import root_mean_squared_error, mean_absolute_error, r2_score
 import matplotlib.pyplot as plt
 
 def create_lagged_features(df, target_col='close', lags=5, drop_missing=True):
@@ -61,11 +61,17 @@ def predict_xgboost(model, X):
     """Run inference using a trained XGBoost model."""
     return model.predict(X)
 
-def evaluate_model(y_true, y_pred):
-    """Compute standard evaluation metrics for regression."""
-    mse = mean_squared_error(y_true, y_pred)
-    rmse = np.sqrt(mse)
-    return {'mse': mse, 'rmse': rmse}
+def evaluate_model_full(y_true, y_pred, label="Model"):
+    """Compute and print RMSE, MAE, and R². Returns metrics as a dictionary."""
+    rmse = root_mean_squared_error(y_true, y_pred)
+    mae = mean_absolute_error(y_true, y_pred)
+    r2 = r2_score(y_true, y_pred)
+    print("="*40)
+    print(f"{label} Performance Metrics:")
+    print(f"RMSE: {rmse:.4f}")
+    print(f"MAE: {mae:.4f}")
+    print(f"R²: {r2:.4f}")
+    return {'rmse': rmse, 'mae': mae, 'r2': r2}
 
 def compute_strategy_alpha(lagged_df, y_pred, benchmark_col='close'):
     """
@@ -87,31 +93,18 @@ def plot_feature_importance(model, feature_names):
     plt.tight_layout()
     plt.show()
 
-# Example pipeline usage:
-# (This will be placed in a notebook or main application file, not in the module)
-if __name__ == "__main__":
-    # Assume dataframe df exists with OHLCV columns and 'timestamp'
-    # df = pd.read_csv('your_data.csv')
-
-    # Step 1: Prepare data (user should provide df)
-    # features, targets, lagged_df = prepare_features_targets(df, target_col='close', lags=5)
-    # X_train, X_test, y_train, y_test = train_test_split(features, targets, test_size=0.2, shuffle=False)
-
-    # Step 2: Train model
-    # model = train_xgboost(X_train, y_train)
-
-    # Step 3: Predict
-    # y_pred = predict_xgboost(model, X_test)
-
-    # Step 4: Evaluate
-    # metrics = evaluate_model(y_test, y_pred)
-    # print(metrics)
-
-    # Step 5: Compute alpha
-    # lagged_test = lagged_df.iloc[X_test.index]
-    # strategy_result, mean_alpha = compute_strategy_alpha(lagged_test, y_pred, benchmark_col='close')
-    # print("Mean Strategy Alpha:", mean_alpha)
-
-    # Step 6: Feature importance
-    # plot_feature_importance(model, X_train.columns)
-    pass
+def plot_predicted_vs_actual(y_true, y_pred, index=None, label="Close Price"):
+    """Plot model-predicted vs actual values over time."""
+    plt.figure(figsize=(12, 5))
+    if index is not None:
+        plt.plot(index, y_true, label="Actual", linewidth=2)
+        plt.plot(index, y_pred, label="Predicted", linewidth=2, linestyle='--')
+    else:
+        plt.plot(y_true, label="Actual", linewidth=2)
+        plt.plot(y_pred, label="Predicted", linewidth=2, linestyle='--')
+    plt.title(f"Predicted vs Actual {label}")
+    plt.xlabel("Time")
+    plt.ylabel(label)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
