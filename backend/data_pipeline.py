@@ -19,6 +19,8 @@ def OHLCV(API_KEY, ticker, from_date, to_date):
             "volume": bar["v"]
         })
     df = pd.DataFrame(bars)
+    if df.empty:
+        return df  # Return empty DataFrame  
     df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
     return df
 
