@@ -10,8 +10,14 @@ CORS(app)  # Enable cross-origin requests
 @app.route('/api/analyze-portfolio', methods=['POST'])
 def analyze_portfolio():
     data = request.get_json()
+    print("Received data:", data)  # Debug: log everything sent
     holdings = data.get('holdings', [])
-    from_date = data.get('from', '2025-01-01')
+    print("Parsed holdings:", holdings)  # Debug: log parsed holdings
+
+    from_date = data.get('from')
+    if not from_date:
+        # Default to a safe and meaningful value, such as a year ago, or as required by your API
+        from_date = (datetime.now().replace(year=datetime.now().year - 1)).strftime('%Y-%m-%d')
     to_date = datetime.now().strftime('%Y-%m-%d')
     api_key = os.environ.get("POLYGON_API_KEY", "YOUR_API_KEY")
 
@@ -28,7 +34,7 @@ def analyze_portfolio():
         asset_df = OHLCV(api_key, ticker, from_date, to_date)
         if asset_df.empty or 'close' not in asset_df.columns:
             continue
-        
+
         latest_close = asset_df['close'].iloc[-1]
         position_value = shares * latest_close
         total_portfolio_value += position_value
