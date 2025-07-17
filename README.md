@@ -1,7 +1,6 @@
 # Investify - AI Investment Analyzer
 
-![Early-Stage UI Preview](<img width="982" height="479" alt="Screenshot 2025-07-17 092008" src="https://github.com/user-attachments/assets/15461eec-a9b0-49b0-9e7a-0ed18cdb14b7" />)
-
+![Early stage UI](investment-research-ai/figures/early-stage-ui.png?raw=true "Title")
 
 ## Overview
 
