@@ -1,10 +1,11 @@
 # Investify - AI Investment Analyzer
 
+## Current early stage UI
 ![Early stage UI](figures/early-stage-ui.png?raw=true "Title")
 
 ## Overview
 
-**Investment Analyzer** is an AI-powered fintech SaaS platform designed to accelerate investment research and risk analytics. By leveraging advanced machine learning, Investment Analyzer delivers actionable insights, predictive signals, and real-time risk assessment using both traditional and alternative data sources.
+**Investify** is an AI-powered fintech SaaS platform designed to accelerate investment research and risk analytics. By leveraging advanced machine learning, Investify delivers actionable insights, predictive signals, and real-time risk assessment using both traditional and alternative data sources.
 
 This platform empowers investment professionals—including analysts, portfolio managers, and institutional investors—to uncover new opportunities, manage risk proactively, and operate more efficiently.
 
