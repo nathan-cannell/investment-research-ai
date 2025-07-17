@@ -1,6 +1,6 @@
 # Investify - AI Investment Analyzer
 
-![Early stage UI](investment-research-ai/figures/early-stage-ui.png?raw=true "Title")
+![Early stage UI](figures/early-stage-ui.png?raw=true "Title")
 
 ## Overview
 
