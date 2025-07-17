@@ -30,7 +30,7 @@ Development is underway with these active priorities:
 
 ## Tech Stack
 
-- **Backend:** Python, FastAPI
+- **Backend:** Python, Flask API
 - **ML Libraries:** XGBoost, scikit-learn, (TensorFlow/PyTorch planned)
 - **Data Processing:** Pandas, NumPy
 - **Frontend:** React (planned prototype)
